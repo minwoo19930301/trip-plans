@@ -463,13 +463,13 @@
                             <div class="w-1.5 h-1.5 rounded-full bg-paris-gold"></div>
                         </div>
                         
-                        <!-- Weather Badge (Left of Day) -->
-                        ${dailyWeatherHtml}
-
                         <div class="flex items-baseline gap-2">
+                            <span class="text-lg ${dateSubColorClass} font-bold font-mono tracking-tighter">${day.date.split('-').slice(1).join('.')}</span>
                             <h3 class="text-xl font-serif font-bold ${dateColorClass}">${day.day}</h3>
-                            <span class="text-sm ${dateSubColorClass} font-medium">${day.date.split('-').slice(1).join('.')}</span>
                         </div>
+
+                        <!-- Weather Badge -->
+                        ${dailyWeatherHtml}
                     </div>
                     
                     <!-- Activities -->
