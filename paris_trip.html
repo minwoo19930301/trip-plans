@@ -106,7 +106,7 @@
     class="bg-slate-50 text-slate-900 antialiased selection:bg-paris-gold selection:text-paris-blue overflow-x-hidden">
 
     <!-- Full Screen Background -->
-    <div class="fixed inset-0 z-0">
+    <div class="fixed inset-0 z-0 h-[100svh]">
         <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2073&auto=format&fit=crop"
             alt="Paris" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-paris-blue/40 mix-blend-multiply"></div>
@@ -123,7 +123,7 @@
             <div class="px-6 pt-6 pb-2">
                 <div class="glass rounded-2xl p-4 text-center relative overflow-hidden group">
                     <div class="absolute top-0 left-0 w-1 h-full bg-paris-gold"></div>
-                    <div class="text-[10px] uppercase tracking-widest text-paris-gold mb-1">Phrase of the Moment</div>
+
                     <div id="french-phrase" class="text-lg font-serif font-bold text-white italic mb-1"></div>
                     <div id="french-pron" class="text-sm text-paris-gold font-medium mb-1"></div>
                     <div id="french-meaning" class="text-xs text-white/70"></div>
@@ -155,7 +155,7 @@
             </div>
 
             <!-- Exchange Rate Widget -->
-            <div class="px-6 pb-2 reveal mt-0">
+            <div class="px-6 pb-2 mt-0">
                 <div class="glass rounded-xl p-3 flex items-center justify-between gap-4">
                     <!-- 1 EUR -> KRW -->
                     <div class="flex items-center gap-3">
@@ -381,6 +381,12 @@
             observer.observe(el);
         });
 
+        // Global flag to track if user has scrolled
+        let userHasScrolled = window.scrollY > 0;
+        window.addEventListener('scroll', () => {
+            userHasScrolled = true;
+        }, { once: true });
+
         // Render Itinerary with Weather
         function renderItinerary(weatherData = null, animate = true) {
             const itineraryContainer = document.getElementById('itinerary-container');
@@ -393,7 +399,7 @@
 
             itineraryData.forEach((day, index) => {
                 const dayEl = document.createElement('div');
-                dayEl.className = `relative pl-8 ${animate ? 'reveal' : ''}`;
+                dayEl.className = 'relative pl-8';
 
                 let isCurrentDay = false;
 
@@ -408,7 +414,7 @@
                         const weatherInfo = getWeatherInfo(weatherData.daily.weather_code[dayIndex]);
 
                         dailyWeatherHtml = `
-                            <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 backdrop-blur-md">
+                            <div class="reveal flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 backdrop-blur-md">
                                 <i data-lucide="${weatherInfo.icon}" class="w-4 h-4 ${weatherInfo.color}"></i>
                                 <span class="text-xs font-bold text-white">${maxTemp}° <span class="text-white/50">/ ${minTemp}°</span></span>
                             </div>
@@ -441,7 +447,7 @@
                             const weatherInfo = getWeatherInfo(weatherData.hourly.weather_code[hourIndex]);
 
                             hourlyWeatherHtml = `
-                                <div class="absolute -left-[48px] top-3.5 flex flex-col items-end justify-center w-[36px] z-10">
+                                <div class="reveal absolute -left-[48px] top-3.5 flex flex-col items-end justify-center w-[36px] z-10">
                                     <i data-lucide="${weatherInfo.icon}" class="w-5 h-5 ${weatherInfo.color} mb-0.5 filter drop-shadow-sm"></i>
                                     <span class="text-[10px] font-bold text-white/90">${temp}°</span>
                                 </div>
@@ -514,10 +520,11 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
             // Scroll to next item if exists
-            // Scroll to next item if exists
             const nextEl = document.getElementById('next-schedule');
-            if (nextEl) {
+            if (nextEl && !userHasScrolled) {
                 setTimeout(() => {
+                    if (userHasScrolled) return; // Double check
+
                     const header = document.getElementById('header-container');
                     const headerHeight = header ? header.offsetHeight : 0;
                     const elementRect = nextEl.getBoundingClientRect();
