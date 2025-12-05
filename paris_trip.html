@@ -102,7 +102,8 @@
     </style>
 </head>
 
-<body class="bg-slate-50 text-slate-900 antialiased selection:bg-paris-gold selection:text-paris-blue">
+<body
+    class="bg-slate-50 text-slate-900 antialiased selection:bg-paris-gold selection:text-paris-blue overflow-x-hidden">
 
     <!-- Full Screen Background -->
     <div class="fixed inset-0 z-0">
@@ -112,51 +113,48 @@
         <div class="absolute inset-0 bg-gradient-to-b from-paris-blue/60 via-transparent to-paris-blue/90"></div>
     </div>
 
-    <div class="max-w-md mx-auto min-h-screen relative z-10 overflow-hidden flex flex-col">
+    <div class="max-w-md mx-auto min-h-screen relative z-10 flex flex-col">
 
-        <!-- Daily French Phrase -->
-        <div class="px-6 pt-8 pb-2">
-            <div class="glass rounded-2xl p-4 text-center relative overflow-hidden group">
-                <div class="absolute top-0 left-0 w-1 h-full bg-paris-gold"></div>
-                <div class="text-[10px] uppercase tracking-widest text-paris-gold mb-1">Phrase of the Moment</div>
-                <div id="french-phrase" class="text-lg font-serif font-bold text-white italic mb-1"></div>
-                <div id="french-pron" class="text-sm text-paris-gold font-medium mb-1"></div>
-                <div id="french-meaning" class="text-xs text-white/70"></div>
+        <!-- Sticky Header Container -->
+        <div class="sticky top-0 z-50 bg-paris-blue/20 backdrop-blur-xl border-b border-white/5 shadow-2xl pb-2">
 
-                <!-- Refresh Button (Optional interaction) -->
-                <button onclick="setRandomPhrase()"
-                    class="absolute right-2 top-2 text-white/20 hover:text-white/60 transition-colors">
-                    <i data-lucide="refresh-cw" class="w-3 h-3"></i>
-                </button>
-            </div>
-        </div>
+            <!-- Daily French Phrase -->
+            <div class="px-6 pt-6 pb-2">
+                <div class="glass rounded-2xl p-4 text-center relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-paris-gold"></div>
+                    <div class="text-[10px] uppercase tracking-widest text-paris-gold mb-1">Phrase of the Moment</div>
+                    <div id="french-phrase" class="text-lg font-serif font-bold text-white italic mb-1"></div>
+                    <div id="french-pron" class="text-sm text-paris-gold font-medium mb-1"></div>
+                    <div id="french-meaning" class="text-xs text-white/70"></div>
 
-        <!-- Header: Clocks & Weather -->
-        <header class="px-6 pt-4 text-white">
-
-            <!-- Dual Clocks -->
-            <div class="reveal active delay-100 grid grid-cols-2 gap-4 mb-8">
-                <!-- Seoul Clock -->
-                <div class="glass rounded-2xl p-4 text-center">
-                    <div class="text-xs text-paris-gold font-bold uppercase tracking-wider mb-1">Seoul</div>
-                    <div id="time-seoul" class="text-2xl font-bold font-serif">--:--</div>
-                    <div id="date-seoul" class="text-[10px] text-white/70">---</div>
-                </div>
-                <!-- Paris Clock -->
-                <div class="glass rounded-2xl p-4 text-center">
-                    <div class="text-xs text-paris-gold font-bold uppercase tracking-wider mb-1">Paris</div>
-                    <div id="time-paris" class="text-2xl font-bold font-serif">--:--</div>
-                    <div id="date-paris" class="text-[10px] text-white/70">---</div>
+                    <!-- Refresh Button -->
+                    <button onclick="setRandomPhrase()"
+                        class="absolute right-2 top-2 text-white/20 hover:text-white/60 transition-colors">
+                        <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- Weather Widget Removed -->
-        </header>
+            <!-- Header: Clocks -->
+            <div class="px-6 pt-2 pb-2 text-white">
+                <div class="reveal active delay-100 grid grid-cols-2 gap-4">
+                    <!-- Seoul Clock -->
+                    <div class="glass rounded-2xl p-4 text-center">
+                        <div class="text-xs text-paris-gold font-bold uppercase tracking-wider mb-1">Seoul</div>
+                        <div id="time-seoul" class="text-2xl font-bold font-serif">--:--</div>
+                        <div id="date-seoul" class="text-[10px] text-white/70">---</div>
+                    </div>
+                    <!-- Paris Clock -->
+                    <div class="glass rounded-2xl p-4 text-center">
+                        <div class="text-xs text-paris-gold font-bold uppercase tracking-wider mb-1">Paris</div>
+                        <div id="time-paris" class="text-2xl font-bold font-serif">--:--</div>
+                        <div id="date-paris" class="text-[10px] text-white/70">---</div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- Itinerary -->
-        <section class="px-6 pb-20 flex-1 pt-2">
             <!-- Exchange Rate Widget -->
-            <div class="mb-6 reveal mt-0">
+            <div class="px-6 pb-2 reveal mt-0">
                 <div class="glass rounded-xl p-3 flex items-center justify-between gap-4">
                     <!-- 1 EUR -> KRW -->
                     <div class="flex items-center gap-3">
@@ -183,6 +181,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Itinerary -->
+        <section class="px-6 pb-20 flex-1 pt-6">
             <div class="relative space-y-8" id="itinerary-container">
                 <!-- Timeline Line -->
                 <div class="absolute left-[11px] top-2 bottom-0 w-[2px] bg-white/20"></div>
@@ -463,13 +465,13 @@
                             <div class="w-1.5 h-1.5 rounded-full bg-paris-gold"></div>
                         </div>
                         
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-lg ${dateSubColorClass} font-bold font-mono tracking-tighter">${day.date.split('-').slice(1).join('.')}</span>
-                            <h3 class="text-xl font-serif font-bold ${dateColorClass}">${day.day}</h3>
-                        </div>
-
-                        <!-- Weather Badge -->
+                        <!-- Weather Badge (Left of Day) -->
                         ${dailyWeatherHtml}
+
+                        <div class="flex items-baseline gap-2">
+                            <h3 class="text-xl font-serif font-bold ${dateColorClass}">${day.day}</h3>
+                            <span class="text-sm ${dateSubColorClass} font-medium">${day.date.split('-').slice(1).join('.')}</span>
+                        </div>
                     </div>
                     
                     <!-- Activities -->
