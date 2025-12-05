@@ -116,7 +116,8 @@
     <div class="max-w-md mx-auto min-h-screen relative z-10 flex flex-col">
 
         <!-- Sticky Header Container -->
-        <div class="sticky top-0 z-50 bg-paris-blue/20 backdrop-blur-xl border-b border-white/5 shadow-2xl pb-2">
+        <div id="header-container"
+            class="sticky top-0 z-50 bg-paris-blue/20 backdrop-blur-xl border-b border-white/5 shadow-2xl pb-2">
 
             <!-- Daily French Phrase -->
             <div class="px-6 pt-6 pb-2">
@@ -513,10 +514,24 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
             // Scroll to next item if exists
+            // Scroll to next item if exists
             const nextEl = document.getElementById('next-schedule');
             if (nextEl) {
                 setTimeout(() => {
-                    nextEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    const header = document.getElementById('header-container');
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    const elementRect = nextEl.getBoundingClientRect();
+                    const absoluteElementTop = elementRect.top + window.scrollY;
+                    const elementHeight = nextEl.offsetHeight;
+                    const viewportHeight = window.innerHeight;
+
+                    // Calculate target scroll position to center element in the available space below header
+                    let targetScrollY = absoluteElementTop + (elementHeight / 2) - (headerHeight + (viewportHeight - headerHeight) / 2);
+
+                    window.scrollTo({
+                        top: targetScrollY,
+                        behavior: 'smooth'
+                    });
                 }, 1000);
             }
         }
