@@ -358,8 +358,30 @@
 
         fetchExchangeRate();
 
+        fetchExchangeRate();
+
+        // Scroll Reveal Animation Setup
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe static reveal elements (Header, Footer, etc.)
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
         // Render Itinerary with Weather
-        function renderItinerary(weatherData = null) {
+        function renderItinerary(weatherData = null, animate = true) {
             const itineraryContainer = document.getElementById('itinerary-container');
             // const weatherData = await fetchWeather(); // Removed blocking call
 
@@ -370,7 +392,7 @@
 
             itineraryData.forEach((day, index) => {
                 const dayEl = document.createElement('div');
-                dayEl.className = 'relative pl-8 reveal';
+                dayEl.className = `relative pl-8 ${animate ? 'reveal' : ''}`;
 
                 let isCurrentDay = false;
 
@@ -464,13 +486,15 @@
                         <div class="w-6 h-6 rounded-full bg-paris-blue border-4 border-white/20 shadow-sm z-10 absolute left-0 flex items-center justify-center ${dotClass}">
                             <div class="w-1.5 h-1.5 rounded-full bg-paris-gold"></div>
                         </div>
-                        
-                        <!-- Weather Badge (Left of Day) -->
-                        ${dailyWeatherHtml}
 
                         <div class="flex items-baseline gap-2">
                             <h3 class="text-xl font-serif font-bold ${dateColorClass}">${day.day}</h3>
                             <span class="text-sm ${dateSubColorClass} font-medium">${day.date.split('-').slice(1).join('.')}</span>
+                        </div>
+                        
+                        <!-- Weather Badge (Right of Day) -->
+                        <div class="ml-auto">
+                            ${dailyWeatherHtml}
                         </div>
                     </div>
                     
@@ -501,28 +525,11 @@
         renderItinerary(); // Render immediately without weather
 
         // Initialize Weather
+        // Initialize Weather
         fetchWeather().then(data => {
             if (data) {
-                renderItinerary(data); // Re-render with weather data when available
-                lucide.createIcons(); // Re-initialize icons for the new weather elements
+                renderItinerary(data, false); // Re-render with weather data when available (no animation)
             }
-        });
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px"
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.reveal').forEach(el => {
-            observer.observe(el);
         });
 
         // Initialize Weather - Moved up to handle async rendering
